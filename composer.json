@@ -1,0 +1,12 @@
+{
+    "name": "kodeio/pdo-crud",
+	"license": "MIT",
+    "type": "library", 
+    "author": {
+        "name": "Ali Hasan",
+        "email": "ali.h.bd@outlook.com"
+    },
+    "autoload": {
+        "psr-4" : {"Kodeio\\Database\\" : "src"}
+    }
+}
