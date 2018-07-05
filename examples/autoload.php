@@ -8,6 +8,6 @@ spl_autoload_register(function ($class){
 	}
 });
 
-Kodeio\Databae\Conn::global(
-	'localhost', 'root', '', 'kupnfly_database', 3307
+Kodeio\Database\Conn::global(
+	'localhost', 'root', '', 'phpcrud_test', 3307
 );

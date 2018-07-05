@@ -1,6 +1,6 @@
 <?php
 
-namespace Kodeio\Conn;
+namespace Kodeio\Database;
 
 use PDOException;
 use PDO;
