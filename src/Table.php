@@ -5,7 +5,7 @@ namespace Kodeio\Database;
 use PDO;
 use Exception;
 
-class Table
+class Table extends Table_Helper
 {
 	public $name, $db, $where='', $values=[]; 
 	
@@ -55,8 +55,27 @@ class Table
 	}
 	
 	/* Methods for reading */
-	public function fetch()
+	public function fetch($column='*')
 	{
-		
+		if($this->db->exec($this->fetchSql($column),$this->values)){
+			if($data = $this->db->statement->fetch(PDO::FETCH_ASSOC)){
+				return (object) $data;
+			}
+			return array();
+		}
+		return null;
 	}
+	
+	public function fetchAll($column='*')
+	{
+		if($this->db->exec($this->fetchSql($column), $this->values)){
+			if($data = $this->db->statement->fetchAll(PDO::FETCH_ASSOC)){
+				return json_decode(json_encode($data));
+			}
+			return array();
+		}
+		return null;
+	}
+	
+	
 }
