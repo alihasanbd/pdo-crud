@@ -7,7 +7,7 @@ use Exception;
 
 class Table
 {
-	public $name, $db; 
+	public $name, $db, $where='', $values=[]; 
 	
 	public function __construct($table, $conn=false)
 	{
@@ -24,6 +24,24 @@ class Table
 			return $this->db->conn->lastInsertId();
 		}
 		return false;
+	}
+	
+	public function where(String $where, Array $values=[])
+	{
+		$this->values = $values; 
+		$this->where = 'WHERE '. $where; 
+		return $this;
+	}
+	
+	public function update(Array $data)
+	{
+		if(null != $this->where){
+			$columns = implode('=?, ', array_keys($data)) .'=?';
+			$values = array_merge(array_values($data), $this->values);
+			$query = "UPDATE {$this->name} SET {$columns} {$this->where}";
+			return $this->db->exec($query, $values);
+		}
+		return null;
 	}
 	
 	

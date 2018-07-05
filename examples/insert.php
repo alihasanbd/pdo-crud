@@ -6,9 +6,9 @@ $test = new Kodeio\Database\Table('query_test');
 
 echo '<pre>';
 print_r($test->insert([
-	"name" => "Ali Hasan4",
-	"email" => "alih4@gmail.com",
-	"phone" => "17495588664"
+	"name" => "Ali Hasan2",
+	"email" => "alih2@gmail.com",
+	"phone" => "17495588662"
 ]));
 
 
