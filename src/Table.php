@@ -15,6 +15,7 @@ class Table
 		$this->name = $table;
 	}
 	
+	/* Methods for IUD */
 	public function insert(Array $data)
 	{
 		$column = implode(', ', array_keys($data));
@@ -44,6 +45,18 @@ class Table
 		return null;
 	}
 	
+	public function delete()
+	{
+		if(null != $this->where){
+			$query = "DELETE FROM {$this->name} {$this->where}";
+			return $this->db->exec($query, $this->values);
+		}
+		return null;
+	}
 	
-	
+	/* Methods for reading */
+	public function fetch()
+	{
+		
+	}
 }
