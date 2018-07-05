@@ -75,7 +75,23 @@ class Table extends Table_Helper
 			return array();
 		}
 		return null;
+	}	
+	
+	public function count()
+	{
+		$query = "SELECT COUNT(*) FROM {$this->name} {$this->where}";
+		if($this->db->exec($query, $this->values)){
+			return $this->db->statement->fetchColumn();
+		}
+		return null;
 	}
 	
-	
+	public function sum(String $column)
+	{
+		$query = "SELECT  SUM({$column}) FROM {$this->name} {$this->where}";
+		if($this->db->exec($query, $this->values)){
+			return $this->db->statement->fetchColumn();
+		}
+		return null;
+	}
 }
