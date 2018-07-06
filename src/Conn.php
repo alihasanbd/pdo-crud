@@ -9,26 +9,27 @@ class Conn
 {	
 	public static $error, $db = false;
 	
-	public static function init($host, $user, $pass, $name, $port)
+	public static function init($host, $user, $pass, $name, $port=3306)
 	{
 		try{
-			return new PDO(
-				"mysql:host={$host}; dbname={$name}; port={$port}", $user, $pass
+			$connection = new PDO(
+				"mysql:host={$host};dbname={$name};port={$port}", $user, $pass
+			);
+			$connection->setAttribute(
+				PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION
 			); 
+			return $connection;
 		}
 		catch(PDOException $e){
 			self::$error = $e->getMessage();
+			return null;
 		}
-		return null;
 	}
 	
-	public static function global($h='', $u='', $pw='', $n='', $p='')
+	public static function global($h='', $u='', $pw='', $n='', $p=3306)
 	{
 		if(self::$db === false){
-			self::$db = self::init($h, $u, $pw, $n, $p);
-			self::$db->setAttribute(
-				PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION
-			);
+			self::$db = self::init($h, $u, $pw, $n, $p); 
 		}
         return self::$db;
 	}

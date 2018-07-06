@@ -1,16 +1,17 @@
 <?php
 
 namespace Kodeio\Database;
-
+ 
+use PDO; 
 use PDOException;
 
 class Query
 {
 	public $conn, $statement, $error; 
 	
-	public function __construct($conn=false)
+	public function __construct(PDO $conn=null)
 	{
-		$this->conn = ($conn)?$conn:Conn::global();
+		$this->conn = ($conn)?$conn:Conn::global(); 
 	}
 	
 	public function exec($query, $values=[])
