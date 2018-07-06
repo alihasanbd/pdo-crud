@@ -27,21 +27,16 @@ abstract class Model
 	
 	public function __call($method, $arguments)
 	{
-		call_user_func_array(
+		$result = call_user_func_array(
 			array($this->table, $method), $arguments
 		);
-		return $this;
+		if($result instanceof Table){
+			return $this;
+		}
+		return $result;
 	}
 	
-	/* Query methods */
-	
-	public function first()
-	{
-		$data = $this->table->orderBy($this->index)->fetch();
-		$this->table->order = '';
-		return $data;
-	}
-	
+	/* Query methods */  
 	public function last()
 	{
 		$data = $this->table->orderBy($this->index, 'DESC')->fetch();
