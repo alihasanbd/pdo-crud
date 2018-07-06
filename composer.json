@@ -1,7 +1,6 @@
 {
     "name": "kodeio/pdo-crud",
-	"license": "MIT",
-    "type": "library", 
+	"license": "MIT", 
     "author": {
         "name": "Ali Hasan",
         "email": "ali.h.bd@outlook.com"
