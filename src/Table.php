@@ -5,14 +5,21 @@ namespace Kodeio\Database;
 use PDO;
 use Exception;
 
-class Table extends Table_Helper
+class Table
 {
-	public $name, $db, $where='', $values=[]; 
+	public $db; 
+	protected $name, $where='', $values=[]; 
+	protected $order='', $limit=''; 
 	
 	public function __construct($table, $conn=false)
 	{
 		$this->db = new Query($conn);
 		$this->name = $table;
+	}
+	
+	protected function fetchSql($column='*')
+	{
+		return "SELECT {$column} FROM {$this->name} {$this->where} {$this->order} {$this->limit}";
 	}
 	
 	/* Methods for IUD */
@@ -93,5 +100,19 @@ class Table extends Table_Helper
 			return $this->db->statement->fetchColumn();
 		}
 		return null;
+	}
+	
+	public function orderBy($column, $order='ASC')
+	{
+		$this->order = "ORDER BY {$column} {$order}";
+		return $this;
+	}
+	
+	public function limit($arg1, $arg2=false)
+	{
+		$offset = (false === $arg2)? 0:$arg1; 
+		$limit = (false === $arg2)? $arg1:$arg2; 
+		$this->limit = "LIMIT {$limit} OFFSET {$offset}"; 
+		return $this;
 	}
 }
