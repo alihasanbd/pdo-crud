@@ -37,11 +37,33 @@ abstract class Model
 	
 	public function first()
 	{
-		return $this->table->orderBy($this->index)->fetch();
+		$data = $this->table->orderBy($this->index)->fetch();
+		$this->table->order = '';
+		return $data;
 	}
 	
 	public function last()
 	{
-		return $this->table->orderBy($this->index, 'DESC')->fetch();
+		$data = $this->table->orderBy($this->index, 'DESC')->fetch();
+		$this->table->order = '';
+		return $data;
+	}
+	
+	public function upsert(Array $data, $compare)
+	{
+		$index = $this->index; 
+		if(false === isset($data[$compare])){
+			throw new Exception('Invalid compare column/value.');
+		}
+		$this->where("{$compare}=?", [$data[$compare]]);
+		if($row = $this->table->fetch()){ 
+			$this->where("{$this->index}=?", [$row->$index]);
+			if(true == $this->table->update($data)){
+				$this->table->where = '';
+				return $row->$index;
+			}
+			return false;
+		}
+		return $this->table->insert($data);
 	}
 }

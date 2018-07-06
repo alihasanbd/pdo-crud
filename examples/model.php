@@ -12,6 +12,11 @@ class TestDB extends Model
 
 
 $test = new TestDB;
+ 
+var_dump($test->upsert([
+	'email' => 'alih1@gmail.com',
+	'phone' => '1749-5588661'
+], 'email'));  
 
 echo "<pre>";
 print_r($test->last()); 

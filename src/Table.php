@@ -7,11 +7,10 @@ use Exception;
 
 class Table
 {
-	public $db; 
-	protected $name, $where='', $values=[]; 
-	protected $order='', $limit=''; 
+	public $db, $order='', $limit=''; 
+	public $name, $where='', $values=[]; 
 	
-	public function __construct($table, $conn=false)
+	public function __construct($table, PDO $conn=null)
 	{
 		$this->db = new Query($conn);
 		$this->name = $table;
@@ -96,7 +95,7 @@ class Table
 	public function sum(String $column)
 	{
 		$query = "SELECT  SUM({$column}) FROM {$this->name} {$this->where}";
-		if($this->db->exec($query, $this->values)){
+		if($this->db->exec($query, $this->values)){ 
 			return $this->db->statement->fetchColumn();
 		}
 		return null;
@@ -114,5 +113,11 @@ class Table
 		$limit = (false === $arg2)? $arg1:$arg2; 
 		$this->limit = "LIMIT {$limit} OFFSET {$offset}"; 
 		return $this;
+	}
+	
+	public function reset()
+	{
+		$this->where =''; $this->values =[]; 
+		$this->order =''; $this->limit =''; 
 	}
 }
