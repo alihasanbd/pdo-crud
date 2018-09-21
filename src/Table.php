@@ -83,9 +83,9 @@ class Table
 		return null;
 	}	
 	
-	public function count()
+	public function count(String $column='*')
 	{
-		$query = "SELECT COUNT(*) FROM {$this->name} {$this->where}";
+		$query = "SELECT COUNT({$column}) FROM {$this->name} {$this->where}";
 		if($this->db->exec($query, $this->values)){
 			return $this->db->statement->fetchColumn();
 		}
