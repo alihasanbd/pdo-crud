@@ -7,16 +7,26 @@ use Exception;
 
 class Table
 {
-	public $db, $order='', $limit=''; 
-	public $name, $where='', $values=[]; 
+	public $name;
+	private $db, $order='', $limit='', $where='', $values=[];
 	
-	public function __construct($table, PDO $conn=null)
+	public function __construct(String $table, PDO $conn=null)
 	{
 		$this->db = new Query($conn);
 		$this->name = $table;
 	}
 	
-	protected function fetchSql($column='*')
+	public function __get(String $name)
+	{
+		return $this->db->$name;
+	}
+	
+	public function query(String $sql, Array $values=[])
+	{
+		return $this->db->exec($sql, $values);
+	}
+	
+	protected function fetchSql(String $column='*')
 	{
 		return "SELECT {$column} FROM {$this->name} {$this->where} {$this->order} {$this->limit}";
 	}
@@ -61,7 +71,7 @@ class Table
 	}
 	
 	/* Methods for reading */
-	public function fetch($column='*')
+	public function fetch(String $column='*')
 	{
 		if($this->db->exec($this->fetchSql($column),$this->values)){
 			if($data = $this->db->statement->fetch(PDO::FETCH_ASSOC)){
@@ -72,7 +82,7 @@ class Table
 		return null;
 	}
 	
-	public function fetchAll($column='*')
+	public function fetchAll(String $column='*')
 	{
 		if($this->db->exec($this->fetchSql($column), $this->values)){
 			if($data = $this->db->statement->fetchAll(PDO::FETCH_ASSOC)){
@@ -101,16 +111,16 @@ class Table
 		return null;
 	}
 	
-	public function orderBy($column, $order='ASC')
+	public function orderBy(String $column, String $order='ASC')
 	{
 		$this->order = "ORDER BY {$column} {$order}";
 		return $this;
 	}
 	
-	public function limit($arg1, $arg2=false)
+	public function limit(Int $arg1, Int $arg2=null)
 	{
-		$offset = (false === $arg2)? 0:$arg1; 
-		$limit = (false === $arg2)? $arg1:$arg2; 
+		$offset = (null === $arg2)? 0:$arg1; 
+		$limit = (null === $arg2)? $arg1:$arg2; 
 		$this->limit = "LIMIT {$limit} OFFSET {$offset}"; 
 		return $this;
 	}

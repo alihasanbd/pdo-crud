@@ -6,5 +6,4 @@ $test = new Kodeio\Database\Table('query_test');
 
 echo '<pre>';
 print_r($test->fetch());
-
-
+echo '</pre>'; 

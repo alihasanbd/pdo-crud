@@ -8,24 +8,23 @@ use PDOException;
 
 class Query
 {
-	public $conn, $statement, $error; 
+	public $conn, $statement, $error=[]; 
 	
 	public function __construct(PDO $conn=null)
 	{
-		$this->conn = ($conn)?$conn:Database::conn(); 
+		$this->conn = ($conn)? $conn:Database::conn(); 
 	}
 	
-	public function exec($query, $values=[])
+	public function exec(String $query, Array $values=[])
 	{
 		try{
-			$this->error = null;
 			$this->statement = $this->conn->prepare(
 				$query, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]
 			); 		
 			return $this->statement->execute($values);  
 		}
 		catch(PDOException $e){ 
-			$this->error = $e->getMessage();
+			$this->error[] = $e->getMessage();
 			return null;
 		}
 	}
