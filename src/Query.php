@@ -3,6 +3,7 @@
 namespace Kodeio\Database;
  
 use PDO; 
+use Kodeio\Database; 
 use PDOException;
 
 class Query
@@ -11,7 +12,7 @@ class Query
 	
 	public function __construct(PDO $conn=null)
 	{
-		$this->conn = ($conn)?$conn:Conn::global(); 
+		$this->conn = ($conn)?$conn:Database::conn(); 
 	}
 	
 	public function exec($query, $values=[])
