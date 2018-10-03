@@ -18,7 +18,9 @@ class Query
 	{
 		try{
 			$this->error = null;
-			$this->statement = $this->conn->prepare($query); 		
+			$this->statement = $this->conn->prepare(
+				$query, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]
+			); 		
 			return $this->statement->execute($values);  
 		}
 		catch(PDOException $e){ 
