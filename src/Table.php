@@ -5,25 +5,20 @@ namespace Kodeio\Database;
 use PDO;
 use Exception;
 
-class Table
+class Table extends Query
 {
 	public $name;
-	private $db, $order='', $limit='', $where='', $values=[];
+	private $order='', $limit='', $where='', $values=[];
 	
 	public function __construct(String $table, PDO $conn=null)
 	{
-		$this->db = new Query($conn);
+		parent::__construct($conn); 
 		$this->name = $table;
-	}
-	
-	public function __get(String $name)
-	{
-		return $this->db->$name;
 	}
 	
 	public function query(String $sql, Array $values=[])
 	{
-		return $this->db->exec($sql, $values);
+		return $this->exec($sql, $values);
 	}
 	
 	protected function fetchSql(String $column='*')
@@ -37,8 +32,8 @@ class Table
 		$column = implode(', ', array_keys($data));
 		$values = implode(', ', array_fill_keys(array_keys($data), '?'));
 		$query = "INSERT INTO {$this->name} ({$column}) VALUES ({$values})";
-		if($this->db->exec($query, array_values($data))){
-			return $this->db->conn->lastInsertId();
+		if($this->exec($query, array_values($data))){
+			return $this->conn->lastInsertId();
 		}
 		return false;
 	}
@@ -56,7 +51,7 @@ class Table
 			$columns = implode('=?, ', array_keys($data)) .'=?';
 			$values = array_merge(array_values($data), $this->values);
 			$query = "UPDATE {$this->name} SET {$columns} {$this->where}";
-			return $this->db->exec($query, $values);
+			return $this->exec($query, $values);
 		}
 		return null;
 	}
@@ -65,7 +60,7 @@ class Table
 	{
 		if(null != $this->where){
 			$query = "DELETE FROM {$this->name} {$this->where}";
-			return $this->db->exec($query, $this->values);
+			return $this->exec($query, $this->values);
 		}
 		return null;
 	}
@@ -73,8 +68,8 @@ class Table
 	/* Methods for reading */
 	public function fetch(String $column='*')
 	{
-		if($this->db->exec($this->fetchSql($column),$this->values)){
-			if($data = $this->db->statement->fetch(PDO::FETCH_ASSOC)){
+		if($this->exec($this->fetchSql($column),$this->values)){
+			if($data = $this->statement->fetch(PDO::FETCH_ASSOC)){
 				return (object) $data;
 			}
 			return array();
@@ -84,8 +79,8 @@ class Table
 	
 	public function fetchAll(String $column='*')
 	{
-		if($this->db->exec($this->fetchSql($column), $this->values)){
-			if($data = $this->db->statement->fetchAll(PDO::FETCH_ASSOC)){
+		if($this->exec($this->fetchSql($column), $this->values)){
+			if($data = $this->statement->fetchAll(PDO::FETCH_ASSOC)){
 				return json_decode(json_encode($data));
 			}
 			return array();
@@ -96,8 +91,8 @@ class Table
 	public function count(String $column='*')
 	{
 		$query = "SELECT COUNT({$column}) FROM {$this->name} {$this->where}";
-		if($this->db->exec($query, $this->values)){
-			return $this->db->statement->fetchColumn();
+		if($this->exec($query, $this->values)){
+			return $this->statement->fetchColumn();
 		}
 		return null;
 	}
@@ -105,8 +100,8 @@ class Table
 	public function sum(String $column)
 	{
 		$query = "SELECT  SUM({$column}) FROM {$this->name} {$this->where}";
-		if($this->db->exec($query, $this->values)){ 
-			return $this->db->statement->fetchColumn();
+		if($this->exec($query, $this->values)){ 
+			return $this->statement->fetchColumn();
 		}
 		return null;
 	}
