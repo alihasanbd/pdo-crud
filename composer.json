@@ -5,6 +5,9 @@
         "name": "Ali Hasan",
         "email": "ali.h.bd@outlook.com"
     },
+	"require" : {
+        "php" : ">=7.0"
+    },
     "autoload": {
         "psr-4" : {"Kodeio\\Database\\" : "src"},
 		"files": ["src/Database.php"]
