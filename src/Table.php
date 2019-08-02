@@ -53,7 +53,7 @@ class Table extends Query
 			$query = "UPDATE {$this->name} SET {$columns} {$this->where}";
 			return $this->exec($query, $values);
 		}
-		return null;
+		return false;
 	}
 	
 	public function delete()
@@ -62,30 +62,24 @@ class Table extends Query
 			$query = "DELETE FROM {$this->name} {$this->where}";
 			return $this->exec($query, $this->values);
 		}
-		return null;
+		return false;
 	}
 	
 	/* Methods for reading */
 	public function fetch(String $column='*')
 	{
 		if($this->exec($this->fetchSql($column),$this->values)){
-			if($data = $this->statement->fetch(PDO::FETCH_ASSOC)){
-				return (object) $data;
-			}
-			return array();
+			return $this->statement->fetch(PDO::FETCH_CLASS);
 		}
-		return null;
+		return false;
 	}
 	
 	public function fetchAll(String $column='*')
 	{
 		if($this->exec($this->fetchSql($column), $this->values)){
-			if($data = $this->statement->fetchAll(PDO::FETCH_ASSOC)){
-				return json_decode(json_encode($data));
-			}
-			return array();
+			return $this->statement->fetchAll(PDO::FETCH_CLASS);
 		}
-		return null;
+		return false;
 	}	
 	
 	public function count(String $column='*')
@@ -94,7 +88,7 @@ class Table extends Query
 		if($this->exec($query, $this->values)){
 			return $this->statement->fetchColumn();
 		}
-		return null;
+		return false;
 	}
 	
 	public function sum(String $column)
@@ -103,7 +97,7 @@ class Table extends Query
 		if($this->exec($query, $this->values)){ 
 			return $this->statement->fetchColumn();
 		}
-		return null;
+		return false;
 	}
 	
 	public function orderBy(String $column, String $order='ASC')
